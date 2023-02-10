@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
-import Button from '@mui/material/Button';
 import './App.css';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+
+import Grid from '@mui/material/Grid';
+
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
 
 function App() {
   // todoのテキストの状態
@@ -19,7 +28,6 @@ function App() {
   // todo追加
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     // 新しいTODOを作成
     const newTodo: Todo = {
       inputValue: inputValue,
@@ -33,6 +41,7 @@ function App() {
 
   // todo編集
   const handleEdit = (id: number, inputValue: string) => {
+    console.log(inputValue);
     const newTodos = todos.map((todo) => {
       if(todo.id === id){
         todo.inputValue = inputValue;
@@ -43,8 +52,8 @@ function App() {
   }
   
   // inputの値をstateにset
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+  const handleChange = (text: React.SetStateAction<string>) => {
+    setInputValue(text);
   } 
 
   // チェックボックス操作
@@ -69,23 +78,47 @@ function App() {
   return (
     <div className="App">
         <div>
-          <h2>Todo List<AccessAlarmIcon /></h2>
+          <h2>Todo List<FormatListBulletedIcon sx={{ fontSize: 30, verticalAlign: "bottom", ml: 1}} /></h2>
           <form onSubmit={(e) => {handleSubmit(e)}}>
-            <input type="text" onChange={(e) => handleChange(e)} className="inputText" />
-            <input type="submit" value="作成" className="submitButton" />
+            <TextField 
+              label="TodoList"
+              variant="outlined"
+              onChange={(e) => handleChange(e.target.value)} 
+            />
+            <Button 
+              type="submit"
+              variant="contained"
+              endIcon={<AddIcon />}
+              sx={{
+                mt: 1,
+                ml: 2,
+              }}
+            >ADD</Button>
           </form>
-          <ul className="todoList">
+          <ul>
             {todos.map((todo) => (
               <li key={todo.id}>
-                <input  
-                  type="text" 
-                  onChange={(e) => handleEdit(todo.id, e.target.value)} 
-                  className="inputText" 
-                  value={todo.inputValue}
-                  disabled={todo.checked}
-                />
-                <input type="checkbox" onChange={() => handleChecked(todo.id, todo.checked)} />
-                <button onClick={() => handleDelete(todo.id)}>消す</button>
+                <Grid container spacing={1} sx={{ textAlign: "center" }}>
+                  <Grid item xs={6}>
+                    <TextField 
+                      label="todo"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => handleEdit(todo.id, e.target.value)} 
+                      value={todo.inputValue}
+                      disabled={todo.checked}
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Checkbox size="small" color="success" onChange={() => handleChecked(todo.id, todo.checked)} sx={{ mt: 2 }} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Button variant="outlined" color="error" onClick={() => handleDelete(todo.id)} sx={{ mt: 2 }}>
+                      delete<DeleteForeverOutlinedIcon />
+                    </Button>
+                  </Grid>
+                </Grid>
               </li>
             ))}
           </ul>
