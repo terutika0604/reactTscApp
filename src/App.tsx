@@ -28,6 +28,10 @@ function App() {
   // todo追加
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if(inputValue == null) {
+      return;
+    }
     // 新しいTODOを作成
     const newTodo: Todo = {
       inputValue: inputValue,
@@ -84,6 +88,8 @@ function App() {
               label="TodoList"
               variant="outlined"
               onChange={(e) => handleChange(e.target.value)} 
+              value={inputValue}
+              inputProps={{ required: true }}
             />
             <Button 
               type="submit"
@@ -123,8 +129,6 @@ function App() {
             ))}
           </ul>
         </div>
-        
-        {/* <Button variant="contained">追加</Button> */}
     </div>
   );
 }
